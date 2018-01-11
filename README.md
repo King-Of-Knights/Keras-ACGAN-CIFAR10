@@ -4,7 +4,7 @@ This is CIFAR10 version. Some interesting tricks refers to Soumith Chintala ganh
 I directly use the Minibatch Layer Code from:  
 https://github.com/forcecore/Keras-GAN-Animeface-Character  
 Thanks for the great work!  
-I am still not satisfied with the generated images yet, Any suggestion is welcomed!  
+I am still not satisfied with the generated images yet, Any suggestion is welcomed!  
 This is one of generate image after 50 epochs:  
 <div align=center><img width="380" height="380" src="https://github.com/King-Of-Knights/Keras-ACGAN-CIFAR10/blob/master/plot_epoch_050_generated.png"/></div>
 This is one of generate image after 200 epochs:  
