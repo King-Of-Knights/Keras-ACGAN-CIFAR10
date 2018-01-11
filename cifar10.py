@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-file: ACGAN - CIFAR10.py
-author: Luke
-de
-Oliveira(lukedeo @ vaitech.io)
-contributor: KnightTuYa(398225157 @ qq.com)
+File: ACGAN - CIFAR10.py
+Author: Luke de Oliveira(lukedeo @ vaitech.io)
+Contributor: KnightTuYa(398225157 @ qq.com)
 Consult
 https: // github.com / lukedeo / keras - acgan
 for MNIST version!
 Consult
 https: // github.com / soumith / ganhacks
 for GAN trick!
-I directly use Minibatch Layer Code from:
+I directly use Minibatch Discrimination Layer Code from:
 https://github.com/forcecore/Keras-GAN-Animeface-Character
 Thanks for the great work!
 I am still not satisfied with the generated images yet, Any suggestion is welcomed!
