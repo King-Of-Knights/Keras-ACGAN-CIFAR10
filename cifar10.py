@@ -20,8 +20,6 @@ from collections import defaultdict
 import pickle as pickle
 from PIL import Image
 from six.moves import range
-import keras.backend as K
-import tensorflow as tf
 from keras.datasets import cifar10
 from keras import layers
 from keras.layers import Input, Dense, Reshape, Flatten, Embedding, Dropout, BatchNormalization
@@ -38,7 +36,6 @@ import numpy as np
 
 np.random.seed(1337)
 class_num = 10
-K.set_image_dim_ordering('th')
 path = "images" # The path to store the generated images
 load_weight = False  #Set True if you need to reload weight
 load_epoch = 1  #Decide which epoch to reload weight, please check your file name
@@ -47,9 +44,9 @@ def build_generator(latent_size):
     # we will map a pair of (z, L), where z is a latent vector and L is a
     # label drawn from P_c, to image space (..., 3, 32, 32)
     cnn = Sequential()
-    cnn.add(Dense(384 * 4 * 4, input_dim=latent_size, activation='relu',
+    cnn.add(Dense(4 * 4 * 384, input_dim=latent_size, activation='relu',
                   kernel_initializer='TruncatedNormal', bias_initializer='Zeros'))
-    cnn.add(Reshape((384, 4, 4)))
+    cnn.add(Reshape((4, 4, 384)))
 
     cnn.add(Conv2DTranspose(192, kernel_size=5, strides=2, padding='same', activation='relu',
                             kernel_initializer='TruncatedNormal', bias_initializer='Zeros'))
@@ -85,7 +82,7 @@ def build_discriminator():
     # the reference paper
     cnn = Sequential()
 
-    cnn.add(GaussianNoise(0.05, input_shape=(3, 32, 32))) #Add this layer to prevent D from overfitting!
+    cnn.add(GaussianNoise(0.05, input_shape=(32, 32, 3))) #Add this layer to prevent D from overfitting!
 
     cnn.add(Conv2D(16, kernel_size=3, strides=2, padding='same',
                    kernel_initializer='TruncatedNormal', bias_initializer='Zeros'))
@@ -123,10 +120,11 @@ def build_discriminator():
     cnn.add(Dropout(0.5))
 
     cnn.add(Flatten())
+    
+    # Add MinibatchDiscrimination Layer to prevent Mode Collapse
+    cnn.add(MinibatchDiscrimination(50, 30)) 
 
-    cnn.add(MinibatchDiscrimination(50, 30))
-
-    image = Input(shape=(3, 32, 32))
+    image = Input(shape=(32, 32, 3))
 
     features = cnn(image)
 
@@ -329,7 +327,7 @@ if __name__ == '__main__':
         sampled_labels = np.array([
             [i] * 10 for i in range(10)
         ]).reshape(-1, 1)
-        generated_images = generator.predict([noise, sampled_labels]).transpose(0, 2, 3, 1)
+        generated_images = generator.predict([noise, sampled_labels])
         generated_images = np.asarray((generated_images*127.5+127.5).astype(np.uint8))
 
         def vis_square(data, padsize=1, padval=0):
@@ -348,6 +346,5 @@ if __name__ == '__main__':
             os.makedirs(path)
         Image.fromarray(img).save(
             'images/plot_epoch_{0:03d}_generated.png'.format(load_epoch))
-        if load_epoch % 5 == 0:
-            pickle.dump({'train': train_history, 'test': test_history},
+        pickle.dump({'train': train_history, 'test': test_history},
                     open('acgan-history.pkl', 'wb'))
