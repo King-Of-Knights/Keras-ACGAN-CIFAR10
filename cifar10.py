@@ -12,7 +12,7 @@ for GAN trick!
 I directly use Minibatch Discrimination Layer Code from:
 https://github.com/forcecore/Keras-GAN-Animeface-Character
 Thanks for the great work!
-I am still not satisfied with the generated images yet, Any suggestion is welcomed!
+I am still not very satisfied with the generated images yet, Any suggestion is welcomed!
 """
 from __future__ import print_function
 import os
@@ -27,10 +27,8 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import Conv2DTranspose, Conv2D
 from keras.models import Sequential, Model
 from keras.optimizers import Adam
-from keras.initializers import TruncatedNormal
 from keras.utils.generic_utils import Progbar
 from Minibatch import MinibatchDiscrimination
-import matplotlib.pyplot as plt
 from keras.layers.noise import GaussianNoise
 import numpy as np
 
